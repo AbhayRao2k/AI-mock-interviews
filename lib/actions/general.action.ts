@@ -123,3 +123,35 @@ export async function getInterviewsByUserId(
     ...doc.data(),
   })) as Interview[];
 }
+
+export async function deleteInterview(interviewId: string): Promise<{ success: boolean; message?: string }> {
+  try {
+    // Check if interview exists
+    const interviewRef = db.collection("interviews").doc(interviewId);
+    const interviewDoc = await interviewRef.get();
+    
+    if (!interviewDoc.exists) {
+      return { success: false, message: "Interview not found" };
+    }
+
+    // Delete the interview
+    await interviewRef.delete();
+
+    // Delete associated feedback (if any)
+    const feedbackQuery = await db
+      .collection("feedback")
+      .where("interviewId", "==", interviewId)
+      .get();
+
+    const feedbackDeletions = feedbackQuery.docs.map((doc) => doc.ref.delete());
+    
+    if (feedbackDeletions.length > 0) {
+      await Promise.all(feedbackDeletions);
+    }
+
+    return { success: true, message: "Interview deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting interview:", error);
+    return { success: false, message: "Failed to delete interview" };
+  }
+}

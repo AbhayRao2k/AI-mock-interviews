@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { Button } from "./ui/button";
 import DisplayTechIcons from "./DisplayTechIcons";
+import InterviewCardMenu from "./InterviewCardMenu";
 
 import { cn, getRandomInterviewCover } from "@/lib/utils";
 import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
@@ -15,6 +16,7 @@ const InterviewCard = async ({
   type,
   techstack,
   createdAt,
+  showMenu = false,
 }: InterviewCardProps) => {
   const feedback =
     userId && interviewId
@@ -50,6 +52,13 @@ const InterviewCard = async ({
           >
             <p className="badge-text ">{normalizedType}</p>
           </div>
+
+          {/* Menu Dropdown (only for user's own interviews) */}
+          {showMenu && interviewId && (
+            <div className="absolute top-12 right-3">
+              <InterviewCardMenu interviewId={interviewId} />
+            </div>
+          )}
 
           {/* Cover Image */}
           <Image
