@@ -86,7 +86,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           idToken,
         });
 
-        toast.success("Signed in successfully.");
+        toast.success("Logged in successfully.");
         router.push("/");
       }
     } catch (error) {
@@ -139,7 +139,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             />
 
             <Button className="btn" type="submit">
-              {isSignIn ? "Sign In" : "Create an Account"}
+              {isSignIn ? "Log In" : "Create an Account"}
             </Button>
           </form>
         </Form>
